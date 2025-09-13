@@ -192,7 +192,7 @@ void initShaders(GLuint * program) {
   //====================================
   // Main loop
   //====================================
-  void runCUDA() {
+  void runCUDA(int frame) {
     // Map OpenGL buffer object for writing from CUDA on a single GPU
     // No data is moved (Win & Linux). When mapped to CUDA, OpenGL should not
     // use this buffer
@@ -210,7 +210,7 @@ void initShaders(GLuint * program) {
     #elif UNIFORM_GRID
     Boids::stepSimulationScatteredGrid(DT);
     #else
-    Boids::stepSimulationNaive(DT);
+    Boids::stepSimulationNaive(DT, frame);
     #endif
 
     #if VISUALIZE
@@ -241,7 +241,7 @@ void initShaders(GLuint * program) {
         frame = 0;
       }
 
-      runCUDA();
+      runCUDA(frame);
 
       std::ostringstream ss;
       ss << "[";
