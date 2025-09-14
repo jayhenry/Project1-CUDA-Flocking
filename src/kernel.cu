@@ -433,7 +433,9 @@ void Boids::stepSimulationNaive(float dt, int frame) {
     }
 
     kernUpdateVelocityBruteForce << <blocksPerGrid, threadsPerBlock >> > (numObjects, dev_pos, vel1, vel2);
+    checkCUDAErrorWithLine("kernUpdateVelocityBruteForce failed!");
     kernUpdatePos << <blocksPerGrid, threadsPerBlock >> > (numObjects, dt, dev_pos, vel2);
+    checkCUDAErrorWithLine("kernUpdatePos failed!");
 }
 
 void Boids::stepSimulationScatteredGrid(float dt) {
@@ -442,13 +444,19 @@ void Boids::stepSimulationScatteredGrid(float dt) {
   // In Parallel:
   // - label each particle with its array index as well as its grid index.
   //   Use 2x width grids.
+
   // - Unstable key sort using Thrust. A stable sort isn't necessary, but you
   //   are welcome to do a performance comparison.
+
   // - Naively unroll the loop for finding the start and end indices of each
   //   cell's data pointers in the array of boid indices
+
   // - Perform velocity updates using neighbor search
+
   // - Update positions
+
   // - Ping-pong buffers as needed
+
 }
 
 void Boids::stepSimulationCoherentGrid(float dt) {
